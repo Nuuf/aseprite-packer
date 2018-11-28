@@ -28,7 +28,7 @@ function createWindow () {
   
   } );
 
-  mainWindow.loadURL( DEV() );
+  mainWindow.loadURL( PROD() );
 
   mainWindow.on( 'close', () => {
 
