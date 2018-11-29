@@ -23,7 +23,6 @@ function createWindow () {
 
   mainWindow.once( 'ready-to-show', () => {
 
-    mainWindow.show();
     console.log( 'loaded...' );
   
   } );
