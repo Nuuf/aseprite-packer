@@ -80,18 +80,6 @@ if ( printOptions ) rconsole.log( JSON.stringify( options, null, 1 ) );
 
     console.log( spritesheet );
 
-    if ( options.w === -1 ) {
-
-      options.w = ssDataCopy.meta.size.w;
-    
-    }
-
-    if ( options.h === -1 ) {
-
-      options.h = ssDataCopy.meta.size.h;
-    
-    }
-
     spritesheet.GenerateFrames();
     const canvas = document.createElement( 'canvas' );
 
@@ -120,33 +108,119 @@ if ( printOptions ) rconsole.log( JSON.stringify( options, null, 1 ) );
     
     } );
 
-    const packer = new Packing.RectanglePacker().SetPadding( options.padding.x, options.padding.y );
-    const result = packer.PackDynamic( sprites );
+    let result = null;
     let w = 0;
     let h = 0;
 
-    sprites.forEach( ( sprite, index ) => {
+    if ( options.pow2 === false ) {
 
-      sprite.position.SetV( result[ index ].tl ).AddV( options.border );
+      if ( options.w !== -1 && options.h !== -1 ) {
 
-      sprite.ComputeLocalBounds();
+        w = options.w;
+        h = options.h;
 
-      w = Math.max( sprite.bounds.local.br.x, w );
-      h = Math.max( sprite.bounds.local.br.y, h );
+        const packer = new Packing.RectanglePacker( options.w, options.h ).SetPadding( options.padding.x, options.padding.y );
 
-    } );
+        result = packer.Pack( sprites, true );
 
-    if ( options.pow2 === true ) {
+        sprites.forEach( ( sprite, index ) => {
 
-      canvas.width = Utility.NearestPow2Round( w + options.border.x );
-      canvas.height = Utility.NearestPow2Round( h + options.border.y );
+          if ( result[ index ] ) {
+
+            sprite.position.SetV( result[ index ].tl ).AddV( options.border );
+
+            sprite.ComputeLocalBounds();
+          
+          }
+
+        } );
+      
+      } else {
+
+        const packer = new Packing.RectanglePacker().SetPadding( options.padding.x, options.padding.y );
+
+        result = packer.PackDynamic( sprites );
+
+        sprites.forEach( ( sprite, index ) => {
+
+          sprite.position.SetV( result[ index ].tl ).AddV( options.border );
+
+          sprite.ComputeLocalBounds();
+
+          w = Math.max( sprite.bounds.local.br.x, w );
+          h = Math.max( sprite.bounds.local.br.y, h );
+
+        } );
+      
+      }
     
     } else {
 
-      canvas.width = options.w;
-      canvas.height = options.h;
-    
+      w = 2;
+      h = 2;
+
+      let foundSize = false;
+      let vert = false;
+
+      while ( foundSize === false ) {
+
+        foundSize = true;
+
+        const packer = new Packing.RectanglePacker( w, h ).SetPadding( options.padding.x, options.padding.y );
+
+        result = packer.Pack( sprites, true );
+
+        if ( result.length === 0 ) {
+
+          foundSize = false;
+        
+        } else {
+
+          for ( var i = 0; i < sprites.length; ++i ) {
+
+            if ( !result[ i ] ) {
+ 
+              foundSize = false;
+              break;
+            
+            }
+        
+          }
+        
+        }
+
+        if ( foundSize === false ) {
+
+          if ( vert === true ) {
+
+            h *= 2;
+            vert = false;
+            
+          } else {
+
+            w *= 2;
+            vert = true;
+            
+          }
+        
+        }
+
+      }
+
+      sprites.forEach( ( sprite, index ) => {
+
+        sprite.position.SetV( result[ index ].tl ).AddV( options.border );
+
+        sprite.ComputeLocalBounds();
+
+      } );
+
     }
+
+    canvas.width = w;
+    canvas.height = h;
+
+    console.log( canvas.width, canvas.height );
 
     sprites.forEach( ( sprite ) => {
 
