@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "no description",
   "scripts": {
-    "start": "electron . --d --paddingX=1 --paddingY=1 --borderX=1 --borderY=1 --p2 --po --pp --imgIn=./../assets/images/spritesheet.png --imgOut=./../assets/images/newImg.png --dataIn=./../assets/xhr/spritesheet.json --dataOut=./../assets/xhr/newData.json"
+    "start": "electron . --d --paddingX=32 --paddingY=32 --borderX=1 --borderY=1 --p2 --po --pp --imgIn=./../assets/images/spritesheet.png --imgOut=./../assets/images/newImg.png --dataIn=./../assets/xhr/spritesheet.json --dataOut=./../assets/xhr/newData.json"
   },
   "main": "main.js",
   "author": "nuuf",

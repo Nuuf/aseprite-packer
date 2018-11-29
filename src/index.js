@@ -40,7 +40,7 @@ createCommands( registry );
 
 registry.Parse( toParse );
 
-if ( printOptions ) rconsole.log( JSON.stringify( options, null, 1 ) );
+if ( printOptions === true ) rconsole.log( JSON.stringify( options, null, 1 ) );
 
 {
 
@@ -111,13 +111,15 @@ if ( printOptions ) rconsole.log( JSON.stringify( options, null, 1 ) );
     let result = null;
     let w = 0;
     let h = 0;
+    let pow2maxW = 0;
+    let pow2maxH = 0;
 
     if ( options.pow2 === false ) {
 
       if ( options.w !== -1 && options.h !== -1 ) {
 
-        w = options.w;
-        h = options.h;
+        w = options.w + options.border.x;
+        h = options.h + options.border.y;
 
         const packer = new Packing.RectanglePacker( options.w, options.h ).SetPadding( options.padding.x, options.padding.y );
 
@@ -151,6 +153,9 @@ if ( printOptions ) rconsole.log( JSON.stringify( options, null, 1 ) );
           h = Math.max( sprite.bounds.local.br.y, h );
 
         } );
+
+        w += options.border.x;
+        h += options.border.y;
       
       }
     
@@ -213,14 +218,33 @@ if ( printOptions ) rconsole.log( JSON.stringify( options, null, 1 ) );
 
         sprite.ComputeLocalBounds();
 
+        pow2maxW = Math.max( sprite.bounds.local.br.x, pow2maxW );
+        pow2maxH = Math.max( sprite.bounds.local.br.y, pow2maxH );
+
       } );
+
+    }
+
+    if ( options.pow2 === true ) {
+    
+      if ( pow2maxH + options.border.y > h ) {
+
+        h = Utility.NearestPow2Ceil( pow2maxH + options.border.y );
+      
+      }
+
+      if ( pow2maxW + options.border.x > w ) {
+
+        w = Utility.NearestPow2Ceil( pow2maxW + options.border.x );
+      
+      }
 
     }
 
     canvas.width = w;
     canvas.height = h;
 
-    console.log( canvas.width, canvas.height );
+    console.log( canvas.width, canvas.height, 'canvas' );
 
     sprites.forEach( ( sprite ) => {
 
@@ -318,13 +342,13 @@ function createCommands ( registry ) {
 
       if ( data[ 'borderX' ] ) {
 
-        options.border.x = parseInt( data[ 'borderX' ] );
+        options.border.x = parseInt( data[ 'borderX' ] ) * 2;
       
       }
 
       if ( data[ 'borderY' ] ) {
 
-        options.border.y = parseInt( data[ 'borderY' ] );
+        options.border.y = parseInt( data[ 'borderY' ] ) * 2;
       
       }
 
