@@ -55,3 +55,31 @@ Install electron globally or locally ( it's not listed as a dependency )
 
 --dataIn=path (req)
 ```
+
+
+#Example batch
+```
+@echo off
+aseprite ^
+-b ^
+./file.ase ^
+./file2.ase ^
+./file3.ase ^
+--sheet spritesheet.png ^
+--data spritesheet.json ^
+--format json-array ^
+--list-tags ^
+--sheet-pack
+aseprite-packer ^
+--p2 ^
+--pp ^
+--po ^
+--imgIn=spritesheet.png ^
+--imgOut=spritesheet-packed.png ^
+--dataIn=spritesheet.json ^
+--dataOut=spritesheet-packed.json ^
+--paddingX=1 ^
+--paddingY=1 ^
+--borderX=1 ^
+--borderY=1
+```
