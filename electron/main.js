@@ -17,7 +17,8 @@ function createWindow () {
     show: false,
     title: title,
     webPreferences: {
-      webSecurity: false
+      webSecurity: false,
+      nodeIntegration: true
     }
   } );
 
