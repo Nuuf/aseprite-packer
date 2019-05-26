@@ -28,7 +28,11 @@ function createWindow () {
   
   } );
 
-  mainWindow.loadURL( PROD() );
+  const url = PROD();
+
+  console.log( 'loading URL: ' + url );
+
+  mainWindow.loadURL( url );
 
   mainWindow.on( 'close', () => {
 
@@ -52,12 +56,16 @@ function bye () {
 function DEV () {
 
   return 'http://localhost:3000';
-
+  
 }
 
 function PROD () {
 
-  return url.format( path.join( __dirname, 'pkg', 'index.html' ) );
+  return url.format( {  
+    pathname: path.join( __dirname, 'pkg', 'index.html' ),
+    protocol: 'file:',
+    slashes: true
+  } );
 
 }
 

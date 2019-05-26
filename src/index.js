@@ -372,7 +372,7 @@ function createCommands ( registry ) {
 
       if ( data[ 'imgIn' ] ) {
 
-        options.imgIn = url.format( path.join( appPath, data[ 'imgIn' ] ) );
+        options.imgIn = url.format( path.join( 'file://', appPath, data[ 'imgIn' ] ) );
       
       }
 
@@ -384,7 +384,7 @@ function createCommands ( registry ) {
 
       if ( data[ 'dataIn' ] ) {
 
-        options.dataIn = url.format( path.join( appPath, data[ 'dataIn' ] ) );
+        options.dataIn = url.format( path.join( 'file://', appPath, data[ 'dataIn' ] ) );
       
       }
 
